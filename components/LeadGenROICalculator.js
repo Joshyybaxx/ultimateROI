@@ -85,14 +85,14 @@ export default function LeadGenROICalculator() {
     <div className="max-w-4xl mx-auto p-6">
       <Card>
         <CardContent className="py-6">
-          <h2 className="text-3xl font-extrabold text-center mb-6">
+          <h2 className="text-3xl font-extrabold text-center mb-6 text-white">
             Lead Gen ROI Calculator
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {Object.entries(inputs).map(([key, value]) => (
               <div key={key}>
-                <Label htmlFor={key}>{labels[key]}</Label>
+                <Label htmlFor={key} className="text-white">{labels[key]}</Label>
                 <Input
                   type="number"
                   step="any"
@@ -133,7 +133,7 @@ export default function LeadGenROICalculator() {
           )}
 
           {results?.boost && (
-            <div className="mt-6 p-4 bg-green-100 rounded-lg text-green-900 shadow border border-green-300">
+            <div className="mt-6 p-4 bg-green-900 rounded-lg text-white shadow border border-green-600">
               <p className="text-lg font-semibold mb-2">🚀 The New Way Wins!</p>
               <p>💥 <strong>ROI Multiple:</strong> {results.roiMultiple.toFixed(2)}x return</p>
               <p>📈 <strong>That's +{results.boost.toFixed(0)}% higher</strong> than the old way</p>
@@ -142,7 +142,7 @@ export default function LeadGenROICalculator() {
           )}
 
           {results?.serviceFeeA && (
-            <div className="mt-6 p-4 bg-yellow-100 rounded-lg text-yellow-900 border border-yellow-300 shadow">
+            <div className="mt-6 p-4 bg-yellow-400 rounded-lg text-gray-900 border border-yellow-600 shadow">
               <p className="text-lg font-bold">💸 Money You Keep</p>
               <p>
                 Instead of paying <strong>${formatNumber(results.serviceFeeA)}</strong> in ongoing fees,
