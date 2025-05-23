@@ -82,10 +82,10 @@ export default function LeadGenROICalculator() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto p-6 text-white">
       <Card>
         <CardContent className="py-6">
-          <h2 className="text-3xl font-extrabold text-center mb-6 text-white">
+          <h2 className="text-3xl font-extrabold text-center mb-6">
             Lead Gen ROI Calculator
           </h2>
 
@@ -142,7 +142,7 @@ export default function LeadGenROICalculator() {
           )}
 
           {results?.serviceFeeA && (
-            <div className="mt-6 p-4 bg-yellow-400 rounded-lg text-gray-900 border border-yellow-600 shadow">
+            <div className="mt-6 p-4 bg-yellow-400 rounded-lg text-black border border-yellow-600 shadow">
               <p className="text-lg font-bold">💸 Money You Keep</p>
               <p>
                 Instead of paying <strong>${formatNumber(results.serviceFeeA)}</strong> in ongoing fees,
