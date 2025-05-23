@@ -54,9 +54,10 @@ export default function LeadGenROICalculator() {
     const gciB = dealsB * inputs.dealValue;
     const netRoiB = gciB - totalCostB;
 
-    const roiBoost = ((netRoiB - netRoiA) / netRoiA) * 100;
-    const roiMultiple = netRoiB / netRoiA;
-    const profitDifference = netRoiB - netRoiA;
+const roiBoost = ((netRoiB - netRoiA) / netRoiA) * 100;
+const roiMultiple = netRoiB / netRoiA;
+const profitDifference = netRoiB - netRoiA;
+
 
     setResults({
       A: {
