@@ -84,7 +84,7 @@ export default function LeadGenROICalculator() {
   return (
     <div className="max-w-4xl mx-auto p-6 text-white">
       <Card>
-        <CardContent className="py-6">
+        <CardContent className="py-6 text-white">
           <h2 className="text-3xl font-extrabold text-center mb-6">
             Lead Gen ROI Calculator
           </h2>
