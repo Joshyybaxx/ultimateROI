@@ -17,10 +17,11 @@ export default function LeadGenROICalculator() {
   const [results, setResults] = useState(null);
 
   const handleChange = (e) => {
-    setInputs({ ...inputs, [e.target.name]: parseFloat(e.target.value) });
+    setInputs({ ...inputs, [e.target.name]: parseFloat(e.target.value) || 0 });
   };
 
   const formatNumber = (num) => {
+    if (isNaN(num)) return "0.00";
     return num.toLocaleString(undefined, {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -37,27 +38,26 @@ export default function LeadGenROICalculator() {
   };
 
   const calculate = () => {
-    const adSpendYearly = inputs.adSpendDaily * 365;
-
+    const adSpendYearly = inputs.adSpendDaily * 365 || 0;
     const serviceFeeA = inputs.serviceFeeA * 12;
+
     const totalCostA = serviceFeeA + adSpendYearly;
-    const leadsA = adSpendYearly / inputs.leadCost;
-    const costPerLeadA = totalCostA / leadsA;
-    const dealsA = leadsA / inputs.leadsPerDeal;
+    const leadsA = adSpendYearly / (inputs.leadCost || 1);
+    const costPerLeadA = totalCostA / (leadsA || 1);
+    const dealsA = leadsA / (inputs.leadsPerDeal || 1);
     const gciA = dealsA * inputs.dealValue;
     const netRoiA = gciA - totalCostA;
 
     const totalCostB = inputs.installFeeB + adSpendYearly;
-    const leadsB = adSpendYearly / inputs.leadCost;
-    const costPerLeadB = totalCostB / leadsB;
-    const dealsB = leadsB / inputs.leadsPerDeal;
+    const leadsB = adSpendYearly / (inputs.leadCost || 1);
+    const costPerLeadB = totalCostB / (leadsB || 1);
+    const dealsB = leadsB / (inputs.leadsPerDeal || 1);
     const gciB = dealsB * inputs.dealValue;
     const netRoiB = gciB - totalCostB;
 
-const roiBoost = ((netRoiB - netRoiA) / netRoiA) * 100;
-const roiMultiple = netRoiB / netRoiA;
-const profitDifference = netRoiB - netRoiA;
-
+    const roiBoost = ((netRoiB - netRoiA) / (netRoiA || 1)) * 100;
+    const roiMultiple = netRoiB / (netRoiA || 1);
+    const profitDifference = netRoiB - netRoiA;
 
     setResults({
       A: {
@@ -77,6 +77,7 @@ const profitDifference = netRoiB - netRoiA;
       boost: roiBoost,
       roiMultiple,
       profitDifference,
+      serviceFeeA,
     });
   };
 
@@ -115,51 +116,37 @@ const profitDifference = netRoiB - netRoiA;
 
           {results && (
             <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
-              {Object.entries(results)
-                .filter(([key]) => key === "A" || key === "B")
-                .map(([option, data]) => (
-                  <div
-                    key={option}
-                    className={`border rounded-xl p-6 shadow-sm text-white ${
-                      option === "A"
-                        ? "bg-red-900 border-red-600"
-                        : "bg-green-900 border-green-600"
-                    }`}
-                  >
-                    <h3 className="text-lg font-semibold mb-4">
-                      Option {option}
-                    </h3>
-                    <p className="mb-1">
-                      💰 <strong>Total Cost:</strong> ${formatNumber(data.totalCost)}
-                    </p>
-                    <p className="mb-1">
-                      📊 <strong>Real Cost Per Lead:</strong> ${formatNumber(data.costPerLead)}
-                    </p>
-                    <p className="mb-1">
-                      📈 <strong>Deals Closed:</strong> {data.deals.toFixed(2)}
-                    </p>
-                    <p className="mb-1">
-                      🏆 <strong>Estimated GCI:</strong> ${formatNumber(data.gci)}
-                    </p>
-                    <p className="mb-1">
-                      🚀 <strong>Net ROI:</strong> ${formatNumber(data.roi)}
-                    </p>
-                  </div>
-                ))}
+              {["A", "B"].map((option) => (
+                <div
+                  key={option}
+                  className={`border rounded-xl p-6 shadow-sm text-white ${option === "A" ? "bg-red-900 border-red-600" : "bg-green-900 border-green-600"}`}
+                >
+                  <h3 className="text-lg font-semibold mb-4">Option {option}</h3>
+                  <p className="mb-1">💰 <strong>Total Cost:</strong> ${formatNumber(results[option].totalCost)}</p>
+                  <p className="mb-1">📊 <strong>Real Cost Per Lead:</strong> ${formatNumber(results[option].costPerLead)}</p>
+                  <p className="mb-1">📈 <strong>Deals Closed:</strong> {results[option].deals.toFixed(2)}</p>
+                  <p className="mb-1">🏆 <strong>Estimated GCI:</strong> ${formatNumber(results[option].gci)}</p>
+                  <p className="mb-1">🚀 <strong>Net ROI:</strong> ${formatNumber(results[option].roi)}</p>
+                </div>
+              ))}
             </div>
           )}
 
           {results?.boost && (
             <div className="mt-6 p-4 bg-green-100 rounded-lg text-green-900 shadow border border-green-300">
               <p className="text-lg font-semibold mb-2">🚀 The New Way Wins!</p>
+              <p>💥 <strong>ROI Multiple:</strong> {results.roiMultiple.toFixed(2)}x return</p>
+              <p>📈 <strong>That's +{results.boost.toFixed(0)}% higher</strong> than the old way</p>
+              <p>💰 <strong>Extra Profit Earned:</strong> ${formatNumber(results.profitDifference)}</p>
+            </div>
+          )}
+
+          {results?.serviceFeeA && (
+            <div className="mt-6 p-4 bg-yellow-100 rounded-lg text-yellow-900 border border-yellow-300 shadow">
+              <p className="text-lg font-bold">💸 Money You Keep</p>
               <p>
-                💥 <strong>ROI Multiple:</strong> {results.roiMultiple.toFixed(2)}x return
-              </p>
-              <p>
-                📈 <strong>That's +{results.boost.toFixed(0)}% higher</strong> than the old way
-              </p>
-              <p>
-                💰 <strong>Extra Profit Earned:</strong> ${formatNumber(results.profitDifference)}
+                Instead of paying <strong>${formatNumber(results.serviceFeeA)}</strong> in ongoing fees,
+                you keep that in your pocket with <span className="font-semibold">The New Way</span>.
               </p>
             </div>
           )}
